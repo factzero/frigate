@@ -3,8 +3,8 @@
 
 namespace ACNN
 {
-	Option::Option()
-	{
-		use_sgemm_convolution = false;
-	}
+    Option::Option()
+    {
+        use_sgemm_convolution = false;
+    }
 }

@@ -3,7 +3,7 @@
 
 namespace ACNN
 {
-	Blob::Blob()
-		: producer(-1), consumer(-1)
-	{}
+    Blob::Blob()
+        : producer(-1), consumer(-1)
+    {}
 }

@@ -5,37 +5,37 @@
 
 namespace ACNN
 {
-	class ModelBin
-	{
-	public:
-		ModelBin() {}
-		virtual ~ModelBin() {}
-		// element type
-		// 0 = auto
-		// 1 = float32
-		// 2 = float16
-		// 3 = int8
-		// load vec
-		virtual aMat load(int w, int type) const = 0;
-		// load image
-		virtual aMat load(int w, int h, int type) const;
-		// load dim
-		virtual aMat load(int w, int h, int c, int type) const;
-	};
+    class ModelBin
+    {
+    public:
+        ModelBin() {}
+        virtual ~ModelBin() {}
+        // element type
+        // 0 = auto
+        // 1 = float32
+        // 2 = float16
+        // 3 = int8
+        // load vec
+        virtual aMat load(int w, int type) const = 0;
+        // load image
+        virtual aMat load(int w, int h, int type) const;
+        // load dim
+        virtual aMat load(int w, int h, int c, int type) const;
+    };
 
-	class ModelBinFromDataReader : public ModelBin
-	{
-	public:
-		explicit ModelBinFromDataReader(const DataReader& dr);
-		virtual ~ModelBinFromDataReader() {}
+    class ModelBinFromDataReader : public ModelBin
+    {
+    public:
+        explicit ModelBinFromDataReader(const DataReader& dr);
+        virtual ~ModelBinFromDataReader() {}
 
-		virtual aMat load(int w, int type) const override;
+        virtual aMat load(int w, int type) const override;
 
-	private:
-		ModelBinFromDataReader(const ModelBinFromDataReader&);
-		ModelBinFromDataReader& operator=(const ModelBinFromDataReader&);
+    private:
+        ModelBinFromDataReader(const ModelBinFromDataReader&);
+        ModelBinFromDataReader& operator=(const ModelBinFromDataReader&);
 
-	private:
-		const DataReader& dr;
-	};
+    private:
+        const DataReader& dr;
+    };
 }

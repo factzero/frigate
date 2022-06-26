@@ -4,12 +4,12 @@
 
 namespace ACNN
 {
-	class Option
-	{
-	public:
-		Option();
-	
-	public:
-		int use_sgemm_convolution;
-	};
+    class Option
+    {
+    public:
+        Option();
+    
+    public:
+        int use_sgemm_convolution;
+    };
 }
