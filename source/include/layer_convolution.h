@@ -18,6 +18,7 @@ namespace ACNN
         float activation(float v) const;
         int forward_c(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
         int forward_sgemm(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
+        int forward_sgemm_sse(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
 
     private:
         int num_output;
@@ -41,5 +42,6 @@ namespace ACNN
 
         aMat weight_data;
         aMat bias_data;
+        mutable aMat weight_sgemm_data;
     };
 }

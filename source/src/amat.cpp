@@ -19,6 +19,12 @@ namespace ACNN
         create(w, h, elemsize, allocator);
     }
 
+    aMat::aMat(int w, int h, int c, int elemsize, Allocator allocator)
+        : m_w(0), m_h(0), m_c(0), m_cstep(0), m_dims(0), m_elemsize(0), m_pvdata(nullptr), m_allocator(nullptr), m_pirefcount(nullptr)
+    {
+        create(w, h, c, elemsize, allocator);
+    }
+
     aMat::aMat(const aMat& m)
         : m_w(m.m_w), m_h(m.m_h), m_c(m.m_c), m_cstep(m.m_cstep), m_dims(m.m_dims), m_elemsize(m.m_elemsize), m_pvdata(m.m_pvdata), m_allocator(m.m_allocator), m_pirefcount(m.m_pirefcount)
     {

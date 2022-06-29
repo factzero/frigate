@@ -10,6 +10,7 @@ namespace ACNN
         aMat();
         aMat(int w, int elemsize = 4, Allocator allocator = nullptr);
         aMat(int w, int h, int elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, int h, int c, int elemsize = 4, Allocator allocator = nullptr);
         aMat(const aMat& m);
         aMat(int w, int h, void* data, int elemsize = 4, Allocator allocator = nullptr);
         aMat(int w, int h, int c, void* data, int elemsize = 4, Allocator allocator = nullptr);
