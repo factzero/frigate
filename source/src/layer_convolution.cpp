@@ -1,3 +1,6 @@
+#if __AVX__
+#include <immintrin.h>
+#endif
 #include "layer_convolution.h"
 #include "layer_factory.h"
 #include "logger.h"
@@ -87,6 +90,316 @@ namespace ACNN
         return;
     }
 
+#if __AVX__
+
+    void im2col_sgemm_sse(const aMat& bottom_im2col, aMat& top_blob, const aMat& kernel, const aMat& bias, const int kernel_w, const int kernel_h,
+        const int inch, const int outch, const int outw, const int outh)
+    {
+        const int kernel_size = kernel_w * kernel_h;
+        const int out_size = outw * outh;
+        // bottom_im2col memory packed 8x8
+        aMat bottom_tm(8 * kernel_size, inch, out_size / 8 + out_size % 8, bottom_im2col.m_elemsize, bottom_im2col.m_allocator);
+        {
+            int i = 0;
+            for (; i + 7 < out_size; i += 8)
+            {
+                const float* img0 = bottom_im2col.channel(0);
+                img0 += i;
+                float* tmpptr = bottom_tm.channel(i / 8);
+                for (int q = 0; q < inch * kernel_size; q++)
+                {
+                    _mm256_storeu_ps(tmpptr, _mm256_loadu_ps(img0));
+                    tmpptr += 8;
+                    img0 += out_size;
+                }
+            }
+
+            for (; i < out_size; i++)
+            {
+                const float* img0 = bottom_im2col.channel(0);
+                img0 += i;
+                float* tmpptr = bottom_tm.channel(i / 8 + i % 8);
+                for (int q = 0; q < inch * kernel_size; q++)
+                {
+                    tmpptr[q] = img0[0];
+                    img0 += out_size;
+                }
+            }
+        }
+
+        // sgemm(int M, int N, int L, float* A, float* B, float* C)
+        {
+            int N = outw * outh;
+            int L = kernel_w * kernel_w * inch;
+            const float* bias_data = bias;
+
+            int pp = 0;
+            for (; pp + 7 < outch; pp += 8)
+            {
+                float* output0 = top_blob.channel(pp + 0);
+                float* output1 = top_blob.channel(pp + 1);
+                float* output2 = top_blob.channel(pp + 2);
+                float* output3 = top_blob.channel(pp + 3);
+                float* output4 = top_blob.channel(pp + 4);
+                float* output5 = top_blob.channel(pp + 5);
+                float* output6 = top_blob.channel(pp + 6);
+                float* output7 = top_blob.channel(pp + 7);
+
+                const float zeros[8] = { 0.f };
+                const float* biasptr = bias_data ? bias_data + pp : zeros;
+                int j = 0;
+                for (; j + 7 < N; j += 8)
+                {
+                    const float* vb = bottom_tm.channel(j / 8);
+                    const float* va = kernel.channel(pp / 8);
+                    __m256 _sum0 = _mm256_setzero_ps();
+                    __m256 _sum1 = _mm256_setzero_ps();
+                    __m256 _sum2 = _mm256_setzero_ps();
+                    __m256 _sum3 = _mm256_setzero_ps();
+                    __m256 _sum4 = _mm256_setzero_ps();
+                    __m256 _sum5 = _mm256_setzero_ps();
+                    __m256 _sum6 = _mm256_setzero_ps();
+                    __m256 _sum7 = _mm256_setzero_ps();
+
+                    int k = 0;
+                    for (; k + 3 < L; k += 4)
+                    {
+                        __m256 _val = _mm256_loadu_ps(vb);
+                        __m256 _w0 = _mm256_broadcast_ss(va + 0);
+                        __m256 _w1 = _mm256_broadcast_ss(va + 1);
+                        _sum0 = _mm256_fmadd_ps(_val, _w0, _sum0);
+                        _sum1 = _mm256_fmadd_ps(_val, _w1, _sum1);
+                        __m256 _w2 = _mm256_broadcast_ss(va + 2);
+                        __m256 _w3 = _mm256_broadcast_ss(va + 3);
+                        _sum2 = _mm256_fmadd_ps(_val, _w2, _sum2);
+                        _sum3 = _mm256_fmadd_ps(_val, _w3, _sum3);
+                        __m256 _w4 = _mm256_broadcast_ss(va + 4);
+                        __m256 _w5 = _mm256_broadcast_ss(va + 5);
+                        _sum4 = _mm256_fmadd_ps(_val, _w4, _sum4);
+                        _sum5 = _mm256_fmadd_ps(_val, _w5, _sum5);
+                        __m256 _w6 = _mm256_broadcast_ss(va + 6);
+                        __m256 _w7 = _mm256_broadcast_ss(va + 7);
+                        _sum6 = _mm256_fmadd_ps(_val, _w6, _sum6);
+                        _sum7 = _mm256_fmadd_ps(_val, _w7, _sum7);                      
+                        va += 8;
+                        vb += 8;
+
+                        _val = _mm256_loadu_ps(vb);
+                        _w0 = _mm256_broadcast_ss(va + 0);
+                        _w1 = _mm256_broadcast_ss(va + 1);
+                        _sum0 = _mm256_fmadd_ps(_val, _w0, _sum0);
+                        _sum1 = _mm256_fmadd_ps(_val, _w1, _sum1);
+                        _w2 = _mm256_broadcast_ss(va + 2);
+                        _w3 = _mm256_broadcast_ss(va + 3);
+                        _sum2 = _mm256_fmadd_ps(_val, _w2, _sum2);
+                        _sum3 = _mm256_fmadd_ps(_val, _w3, _sum3);
+                        _w4 = _mm256_broadcast_ss(va + 4);
+                        _w5 = _mm256_broadcast_ss(va + 5);
+                        _sum4 = _mm256_fmadd_ps(_val, _w4, _sum4);
+                        _sum5 = _mm256_fmadd_ps(_val, _w5, _sum5);
+                        _w6 = _mm256_broadcast_ss(va + 6);
+                        _w7 = _mm256_broadcast_ss(va + 7);
+                        _sum6 = _mm256_fmadd_ps(_val, _w6, _sum6);
+                        _sum7 = _mm256_fmadd_ps(_val, _w7, _sum7);
+                        va += 8;
+                        vb += 8;
+
+                        _val = _mm256_loadu_ps(vb);
+                        _w0 = _mm256_broadcast_ss(va + 0);
+                        _w1 = _mm256_broadcast_ss(va + 1);
+                        _sum0 = _mm256_fmadd_ps(_val, _w0, _sum0);
+                        _sum1 = _mm256_fmadd_ps(_val, _w1, _sum1);
+                        _w2 = _mm256_broadcast_ss(va + 2);
+                        _w3 = _mm256_broadcast_ss(va + 3);
+                        _sum2 = _mm256_fmadd_ps(_val, _w2, _sum2);
+                        _sum3 = _mm256_fmadd_ps(_val, _w3, _sum3);
+                        _w4 = _mm256_broadcast_ss(va + 4);
+                        _w5 = _mm256_broadcast_ss(va + 5);
+                        _sum4 = _mm256_fmadd_ps(_val, _w4, _sum4);
+                        _sum5 = _mm256_fmadd_ps(_val, _w5, _sum5);
+                        _w6 = _mm256_broadcast_ss(va + 6);
+                        _w7 = _mm256_broadcast_ss(va + 7);
+                        _sum6 = _mm256_fmadd_ps(_val, _w6, _sum6);
+                        _sum7 = _mm256_fmadd_ps(_val, _w7, _sum7);
+                        va += 8;
+                        vb += 8;
+
+                        _val = _mm256_loadu_ps(vb);
+                        _w0 = _mm256_broadcast_ss(va + 0);
+                        _w1 = _mm256_broadcast_ss(va + 1);
+                        _sum0 = _mm256_fmadd_ps(_val, _w0, _sum0);
+                        _sum1 = _mm256_fmadd_ps(_val, _w1, _sum1);
+                        _w2 = _mm256_broadcast_ss(va + 2);
+                        _w3 = _mm256_broadcast_ss(va + 3);
+                        _sum2 = _mm256_fmadd_ps(_val, _w2, _sum2);
+                        _sum3 = _mm256_fmadd_ps(_val, _w3, _sum3);
+                        _w4 = _mm256_broadcast_ss(va + 4);
+                        _w5 = _mm256_broadcast_ss(va + 5);
+                        _sum4 = _mm256_fmadd_ps(_val, _w4, _sum4);
+                        _sum5 = _mm256_fmadd_ps(_val, _w5, _sum5);
+                        _w6 = _mm256_broadcast_ss(va + 6);
+                        _w7 = _mm256_broadcast_ss(va + 7);
+                        _sum6 = _mm256_fmadd_ps(_val, _w6, _sum6);
+                        _sum7 = _mm256_fmadd_ps(_val, _w7, _sum7);
+                        va += 8;
+                        vb += 8;
+                    }
+
+                    for (; k < L; k++)
+                    {
+                        __m256 _val = _mm256_loadu_ps(vb);
+                        __m256 _w0 = _mm256_broadcast_ss(va + 0);
+                        __m256 _w1 = _mm256_broadcast_ss(va + 1);
+                        _sum0 = _mm256_fmadd_ps(_val, _w0, _sum0);
+                        _sum1 = _mm256_fmadd_ps(_val, _w1, _sum1);
+                        __m256 _w2 = _mm256_broadcast_ss(va + 2);
+                        __m256 _w3 = _mm256_broadcast_ss(va + 3);
+                        _sum2 = _mm256_fmadd_ps(_val, _w2, _sum2);
+                        _sum3 = _mm256_fmadd_ps(_val, _w3, _sum3);
+                        __m256 _w4 = _mm256_broadcast_ss(va + 4);
+                        __m256 _w5 = _mm256_broadcast_ss(va + 5);
+                        _sum4 = _mm256_fmadd_ps(_val, _w4, _sum4);
+                        _sum5 = _mm256_fmadd_ps(_val, _w5, _sum5);
+                        __m256 _w6 = _mm256_broadcast_ss(va + 6);
+                        __m256 _w7 = _mm256_broadcast_ss(va + 7);
+                        _sum6 = _mm256_fmadd_ps(_val, _w6, _sum6);
+                        _sum7 = _mm256_fmadd_ps(_val, _w7, _sum7);
+                        va += 8;
+                        vb += 8;
+                    }
+
+                    _sum0 = _mm256_add_ps(_sum0, _mm256_broadcast_ss(biasptr + 0));
+                    _sum1 = _mm256_add_ps(_sum1, _mm256_broadcast_ss(biasptr + 1));
+                    _sum2 = _mm256_add_ps(_sum2, _mm256_broadcast_ss(biasptr + 2));
+                    _sum3 = _mm256_add_ps(_sum3, _mm256_broadcast_ss(biasptr + 3));
+                    _sum4 = _mm256_add_ps(_sum4, _mm256_broadcast_ss(biasptr + 4));
+                    _sum5 = _mm256_add_ps(_sum5, _mm256_broadcast_ss(biasptr + 5));
+                    _sum6 = _mm256_add_ps(_sum6, _mm256_broadcast_ss(biasptr + 6));
+                    _sum7 = _mm256_add_ps(_sum7, _mm256_broadcast_ss(biasptr + 7));
+
+                    _mm256_storeu_ps(output0, _sum0);
+                    _mm256_storeu_ps(output1, _sum1);
+                    _mm256_storeu_ps(output2, _sum2);
+                    _mm256_storeu_ps(output3, _sum3);
+                    _mm256_storeu_ps(output4, _sum4);
+                    _mm256_storeu_ps(output5, _sum5);
+                    _mm256_storeu_ps(output6, _sum6);
+                    _mm256_storeu_ps(output7, _sum7);
+
+                    output0 += 8;
+                    output1 += 8;
+                    output2 += 8;
+                    output3 += 8;
+                    output4 += 8;
+                    output5 += 8;
+                    output6 += 8;
+                    output7 += 8;
+                }
+
+                for (; j < N; j++)
+                {
+                    const float* vb = bottom_tm.channel(j / 8 + j % 8);
+                    const float* va = kernel.channel(pp / 8);
+                    __m256 _sum = _mm256_setzero_ps();
+
+                    for (int k = 0; k < L; k++)
+                    {
+                        __m256 _val = _mm256_broadcast_ss(vb);
+                        __m256 _w = _mm256_loadu_ps(va);
+                        _sum = _mm256_fmadd_ps(_val, _w, _sum);
+                        va += 8;
+                        vb += 1;
+                    }
+
+                    float sum[8];
+                    _mm256_storeu_ps(sum, _sum);
+
+                    output0[0] = sum[0] + biasptr[0];
+                    output1[0] = sum[1] + biasptr[1];
+                    output2[0] = sum[2] + biasptr[2];
+                    output3[0] = sum[3] + biasptr[3];
+                    output4[0] = sum[4] + biasptr[4];
+                    output5[0] = sum[5] + biasptr[5];
+                    output6[0] = sum[6] + biasptr[6];
+                    output7[0] = sum[7] + biasptr[7];
+
+                    output0++;
+                    output1++;
+                    output2++;
+                    output3++;
+                    output4++;
+                    output5++;
+                    output6++;
+                    output7++;
+                }
+            }
+
+            for (; pp < outch; pp++)
+            {
+                float* output = top_blob.channel(pp);
+                const float bias0 = bias_data ? bias_data[pp] : 0.f;
+
+                int j = 0;
+                for (; j + 7 < N; j += 8)
+                {
+                    const float* vb = bottom_tm.channel(j / 8);
+                    const float* va = kernel.channel(pp / 8 + pp % 8);
+                    float sum[8] = { 0.f };
+
+                    int k = 0;
+                    for (; k + 7 < L; k += 8)
+                    {
+                        for (int n = 0; n < 8; n++)
+                        {
+                            sum[n] += va[0] * vb[n];
+                            sum[n] += va[1] * vb[n + 8];
+                            sum[n] += va[2] * vb[n + 16];
+                            sum[n] += va[3] * vb[n + 24];
+                            sum[n] += va[4] * vb[n + 32];
+                            sum[n] += va[5] * vb[n + 40];
+                            sum[n] += va[6] * vb[n + 48];
+                            sum[n] += va[7] * vb[n + 56];
+                        }
+                        va += 8;
+                        vb += 64;
+                    }
+
+                    for (; k < L; k++)
+                    {
+                        for (int n = 0; n < 8; n++)
+                        {
+                            sum[n] += va[0] * vb[n];
+                        }
+                        va += 1;
+                        vb += 8;
+                    }
+
+                    for (int n = 0; n < 8; n++)
+                    {
+                        output[n] = sum[n] + bias0;
+                    }
+                    output += 8;
+                }
+
+                for (; j < N; j++)
+                {
+                    const float* vb = bottom_tm.channel(j / 8 + j % 8);
+                    const float* va = kernel.channel(pp / 8 + pp % 8);
+                    float sum0 = 0.f;
+
+                    for (int k = 0; k < L; k++)
+                    {
+                        sum0 += va[k] * vb[k];
+                    }
+                    output[0] = sum0;
+                    output++;
+                }
+            }
+        }
+
+        return;
+    }
+#else
     void im2col_sgemm_sse(const aMat& bottom_im2col, aMat& top_blob, const aMat& kernel, const aMat& bias, const int kernel_w, const int kernel_h, 
         const int inch, const int outch, const int outw, const int outh)
     {
@@ -404,6 +717,7 @@ namespace ACNN
 
         return;
     }
+#endif
 
     Convolution::Convolution(const LayerParam& layer_param)
         : Layer(layer_param)
