@@ -1,15 +1,17 @@
 #pragma once
-#include "layer.h"
-
+#if __AVX__
+#include "layer/layer_relu.h"
 
 namespace ACNN
 {
-    class Split : public Layer
+    class ReluX86avx : public Relu
     {
     public:
-        Split(const LayerParam& layer_param);
+        ReluX86avx(const LayerParam& layer_param);
+        virtual ~ReluX86avx() {}
 
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
-
     };
 }
+
+#endif

@@ -117,7 +117,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__AVX__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\source\include;C:\tools\opencv-3.4.13\build\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -134,7 +134,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;__AVX__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\source\include;C:\tools\opencv-3.4.13\build\install\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -151,16 +151,19 @@
     <ClCompile Include="source\src\amat.cpp" />
     <ClCompile Include="source\src\blob.cpp" />
     <ClCompile Include="source\src\data_reader.cpp" />
-    <ClCompile Include="source\src\layer.cpp" />
-    <ClCompile Include="source\src\layer_concat.cpp" />
-    <ClCompile Include="source\src\layer_convolution.cpp" />
-    <ClCompile Include="source\src\layer_dropout.cpp" />
-    <ClCompile Include="source\src\layer_factory.cpp" />
-    <ClCompile Include="source\src\layer_input.cpp" />
-    <ClCompile Include="source\src\layer_pooling.cpp" />
-    <ClCompile Include="source\src\layer_relu.cpp" />
-    <ClCompile Include="source\src\layer_softmax.cpp" />
-    <ClCompile Include="source\src\layer_split.cpp" />
+    <ClCompile Include="source\src\layer\layer.cpp" />
+    <ClCompile Include="source\src\layer\layer_concat.cpp" />
+    <ClCompile Include="source\src\layer\layer_convolution.cpp" />
+    <ClCompile Include="source\src\layer\layer_dropout.cpp" />
+    <ClCompile Include="source\src\layer\layer_factory.cpp" />
+    <ClCompile Include="source\src\layer\layer_input.cpp" />
+    <ClCompile Include="source\src\layer\layer_pooling.cpp" />
+    <ClCompile Include="source\src\layer\layer_relu.cpp" />
+    <ClCompile Include="source\src\layer\layer_softmax.cpp" />
+    <ClCompile Include="source\src\layer\layer_split.cpp" />
+    <ClCompile Include="source\src\layer\x86\convolution_x86_avx.cpp" />
+    <ClCompile Include="source\src\layer\x86\pooling_x86_avx.cpp" />
+    <ClCompile Include="source\src\layer\x86\relu_x86_avx.cpp" />
     <ClCompile Include="source\src\logger.cpp" />
     <ClCompile Include="source\src\main.cpp" />
     <ClCompile Include="source\src\model_bin.cpp" />
@@ -173,16 +176,19 @@
     <ClInclude Include="source\include\amat.h" />
     <ClInclude Include="source\include\blob.h" />
     <ClInclude Include="source\include\data_reader.h" />
-    <ClInclude Include="source\include\layer.h" />
-    <ClInclude Include="source\include\layer_concat.h" />
-    <ClInclude Include="source\include\layer_convolution.h" />
-    <ClInclude Include="source\include\layer_dropout.h" />
-    <ClInclude Include="source\include\layer_factory.h" />
-    <ClInclude Include="source\include\layer_input.h" />
-    <ClInclude Include="source\include\layer_pooling.h" />
-    <ClInclude Include="source\include\layer_relu.h" />
-    <ClInclude Include="source\include\layer_softmax.h" />
-    <ClInclude Include="source\include\layer_split.h" />
+    <ClInclude Include="source\include\layer\layer.h" />
+    <ClInclude Include="source\include\layer\layer_concat.h" />
+    <ClInclude Include="source\include\layer\layer_convolution.h" />
+    <ClInclude Include="source\include\layer\layer_dropout.h" />
+    <ClInclude Include="source\include\layer\layer_factory.h" />
+    <ClInclude Include="source\include\layer\layer_input.h" />
+    <ClInclude Include="source\include\layer\layer_pooling.h" />
+    <ClInclude Include="source\include\layer\layer_relu.h" />
+    <ClInclude Include="source\include\layer\layer_softmax.h" />
+    <ClInclude Include="source\include\layer\layer_split.h" />
+    <ClInclude Include="source\include\layer\x86\convolution_x86_avx.h" />
+    <ClInclude Include="source\include\layer\x86\pooling_x86_avx.h" />
+    <ClInclude Include="source\include\layer\x86\relu_x86_avx.h" />
     <ClInclude Include="source\include\logger.h" />
     <ClInclude Include="source\include\model_bin.h" />
     <ClInclude Include="source\include\net.h" />

@@ -8,14 +8,15 @@ namespace ACNN
     {
     public:
         Pooling(const LayerParam& layer_param);
+        virtual ~Pooling() {}
 
         virtual int load_param(const ParamDict& pd) override;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
-    private:
+    protected:
         void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered) const;
 
-    private:
+    protected:
         int pooling_type;
         int kernel_w;
         int kernel_h;

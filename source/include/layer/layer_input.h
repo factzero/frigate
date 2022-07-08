@@ -4,15 +4,19 @@
 
 namespace ACNN
 {
-    class Concat : public Layer
+    class Input : public Layer
     {
     public:
-        Concat(const LayerParam& layer_param);
+        Input(const LayerParam& layer_param);
+        virtual ~Input() {}
 
         virtual int load_param(const ParamDict& pd) override;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
     private:
-        int axis;
+        int w;
+        int h;
+        int d;
+        int c;
     };
 }

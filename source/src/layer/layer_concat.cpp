@@ -1,5 +1,5 @@
-#include "layer_concat.h"
-#include "layer_factory.h"
+#include "layer/layer_concat.h"
+#include "layer/layer_factory.h"
 
 namespace ACNN
 {

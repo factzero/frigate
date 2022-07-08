@@ -1,5 +1,5 @@
-#include "layer_split.h"
-#include "layer_factory.h"
+#include "layer/layer_split.h"
+#include "layer/layer_factory.h"
 
 
 namespace ACNN

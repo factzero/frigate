@@ -25,6 +25,7 @@ namespace ACNN
         LayerRegistry();
 
         static std::string LayerTypeListString();
+        static std::string LayerType(const std::string& type);
     };
 
     class LayerRegisterer 

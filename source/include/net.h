@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "blob.h"
-#include "layer.h"
+#include "layer/layer.h"
 
 
 namespace ACNN

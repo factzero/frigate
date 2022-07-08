@@ -4,23 +4,27 @@
 
 namespace ACNN
 {
+    void conv_im2col(const aMat& blob, aMat& blob_tm, const int kernel_w, const int kernel_h, const int stride_w, const int stride_h, const int outw, const int outh);
+
     class Convolution : public Layer
     {
     public:
         Convolution(const LayerParam& layer_param);
+        virtual ~Convolution() {}
 
         virtual int load_param(const ParamDict& pd) override;
         virtual int load_model(const ModelBin& mb) override;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
-    private:
+    protected:
         void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered) const;
         float activation(float v) const;
-        int forward_c(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
-        int forward_sgemm(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
-        int forward_sgemm_sse(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
 
     private:
+        int forward_c(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
+        int forward_sgemm(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
+
+    protected:
         int num_output;
         int kernel_w;
         int kernel_h;

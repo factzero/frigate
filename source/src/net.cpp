@@ -2,7 +2,7 @@
 #include "net.h"
 #include "data_reader.h"
 #include "param_dict.h"
-#include "layer_factory.h"
+#include "layer/layer_factory.h"
 #include "logger.h"
 
 

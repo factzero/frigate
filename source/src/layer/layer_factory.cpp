@@ -1,4 +1,4 @@
-#include "layer_factory.h"
+#include "layer/layer_factory.h"
 #include "logger.h"
 
 
@@ -25,7 +25,7 @@ namespace ACNN
     std::shared_ptr<Layer> LayerRegistry::CreateLayer(const LayerParam& param)
     {
         CreatorRegistry& registry = Registry();
-        const std::string& type = param.layer_type;
+        const std::string& type = LayerType(param.layer_type);
         if (registry.count(type) != 1)
         {
             ConsoleELog << "Unknown layer type: " << type << " (known types: " << LayerTypeListString() << ")";
@@ -59,6 +59,22 @@ namespace ACNN
         }
 
         return layer_types_str;
+    }
+
+    std::string LayerRegistry::LayerType(const std::string& type)
+    {
+        std::string extension = "";
+#if __AVX__
+        extension = "_x86_avx";
+#endif
+        std::string tmp_type = type + extension;
+        CreatorRegistry& registry = Registry();
+        if (registry.count(tmp_type) != 1)
+        {
+            return type;
+        }
+
+        return tmp_type;
     }
 
     LayerRegisterer::LayerRegisterer(const std::string& type, std::shared_ptr<Layer>(*creator)(const LayerParam&))

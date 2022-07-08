@@ -1,5 +1,5 @@
-#include "layer_dropout.h"
-#include "layer_factory.h"
+#include "layer/layer_dropout.h"
+#include "layer/layer_factory.h"
 #include "logger.h"
 
 

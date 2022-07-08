@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\layer">
+      <UniqueIdentifier>{4c52f292-a7b8-4a57-ae3f-406516811cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\layer\x86">
+      <UniqueIdentifier>{21c1f168-fde3-4307-b121-3da9108e67da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\layer">
+      <UniqueIdentifier>{a3aaf465-835f-40d1-b926-952228223c95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\layer\x86">
+      <UniqueIdentifier>{a60dcfea-3f8c-4ddf-8eb3-4a93a2ab34ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\src\main.cpp">
@@ -27,40 +39,10 @@
     <ClCompile Include="source\src\param_dict.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="source\src\layer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_convolution.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_factory.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_concat.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_input.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_pooling.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_relu.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_softmax.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_split.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="source\src\net.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="source\src\blob.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="source\src\layer_dropout.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="source\src\model_bin.cpp">
@@ -71,6 +53,45 @@
     </ClCompile>
     <ClCompile Include="source\src\logger.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\x86\convolution_x86_avx.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\x86\pooling_x86_avx.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\x86\relu_x86_avx.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_concat.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_convolution.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_dropout.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_factory.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_input.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_pooling.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_relu.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_softmax.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_split.cpp">
+      <Filter>源文件\layer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,40 +107,10 @@
     <ClInclude Include="source\include\data_reader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="source\include\layer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_convolution.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_factory.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_input.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_relu.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_pooling.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_split.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_concat.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_softmax.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="source\include\net.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="source\include\blob.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="source\include\layer_dropout.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="source\include\model_bin.h">
@@ -130,6 +121,45 @@
     </ClInclude>
     <ClInclude Include="source\include\logger.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\convolution_x86_avx.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\pooling_x86_avx.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\relu_x86_avx.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_concat.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_convolution.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_dropout.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_factory.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_input.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_pooling.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_relu.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_softmax.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_split.h">
+      <Filter>头文件\layer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

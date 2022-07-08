@@ -4,15 +4,16 @@
 
 namespace ACNN
 {
-    class Relu : public Layer
+    class Concat : public Layer
     {
     public:
-        Relu(const LayerParam& layer_param);
+        Concat(const LayerParam& layer_param);
+        virtual ~Concat() {}
 
         virtual int load_param(const ParamDict& pd) override;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
     private:
-        float slope;
+        int axis;
     };
 }
