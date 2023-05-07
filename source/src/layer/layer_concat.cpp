@@ -32,7 +32,7 @@ namespace ACNN
         for (size_t i = 0; i < bottom_blobs.size(); i++)
         {
             const aMat& bottom_blob = bottom_blobs[i];
-            int size = bottom_blob.total();
+            size_t size = bottom_blob.total();
             const float* inptr = bottom_blob;
             float* outptr = top_blob.channel(q);
             memcpy((void*)outptr, (const void*)inptr, size * sizeof(float));

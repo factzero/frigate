@@ -14,15 +14,24 @@ namespace ACNN
 
         virtual int load_param(const ParamDict& pd) override;
         virtual int load_model(const ModelBin& mb) override;
+
+        virtual int create_pipeline(const Option& opt) override;
+
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
     protected:
-        void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered) const;
+        void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered, const Option& opt) const;
         float activation(float v) const;
 
     private:
-        int forward_c(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
-        int forward_sgemm(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs) const;
+        void convolution_int8(const aMat& bottom_blob_int8, aMat& top_blob_int32, const aMat& weight_data_int8, 
+            int kernel_w, int kernel_h, int dilation_w, int dilation_h,int stride_w, int stride_h, const Option& opt) const;
+        int forward_int8(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const;
+        int forward_fp32(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const;
+        int forward_sgemm(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const;
+
+    private:
+        int create_pipeline_int8(const Option& opt);
 
     protected:
         int num_output;
@@ -47,5 +56,12 @@ namespace ACNN
         aMat weight_data;
         aMat bias_data;
         mutable aMat weight_sgemm_data;
+
+        aMat weight_data_int8_scales;
+        aMat bottom_blob_int8_scales;
+        aMat top_blob_int8_scales;
+
+        aMat scale_in_data;
+        std::shared_ptr<Layer> m_activation;
     };
 }

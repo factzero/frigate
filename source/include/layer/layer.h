@@ -22,10 +22,22 @@ namespace ACNN
 
         virtual int load_param(const ParamDict& pd);
         virtual int load_model(const ModelBin& mb);
+
+        virtual int create_pipeline(const Option& opt);
+
+        virtual int forward(const aMat& bottom_blobs, aMat& top_blobs, const Option& opt) const;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const;
+        virtual int forward_inplace (aMat& bottom_top_blob, const Option& opt) const;
+        virtual int forward_inplace(std::vector<aMat>& bottom_top_blobs, const Option& opt) const;
 
         std::string get_layer_type() const { return m_layer_type; }
         std::string get_layer_name() const { return m_layer_name; }
+
+    public:
+        // support inplace inference
+        bool support_inplace;
+        // accept int8
+        bool support_int8_storage;
 
     public:
         // blob index which this layer needs as input

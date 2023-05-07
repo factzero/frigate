@@ -7,12 +7,12 @@ namespace ACNN
 {
 #define ACNN_MALLOC_ALIGN 64
 
-    inline int alignSize(int sz, int n)
+    inline size_t alignSize(size_t sz, int n)
     {
         return (sz + n - 1) & -n;
     }
 
-    inline void* fastMalloc(int size)
+    inline void* fastMalloc(size_t size)
     {
         return _aligned_malloc(size, ACNN_MALLOC_ALIGN);
     }
@@ -36,7 +36,7 @@ namespace ACNN
     {
     public:
         virtual ~AllocatorAPI() {}
-        virtual void* fastMalloc(int size) = 0;
+        virtual void* fastMalloc(size_t size) = 0;
         virtual void fastFree(void* ptr) = 0;
     };
 

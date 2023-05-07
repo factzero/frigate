@@ -7,19 +7,19 @@ namespace ACNN
         : m_w(0), m_h(0), m_c(0), m_cstep(0), m_dims(0), m_elemsize(0), m_pvdata(nullptr), m_allocator(nullptr), m_pirefcount(nullptr)
     {}
 
-    aMat::aMat(int w, int elemsize, Allocator allocator)
+    aMat::aMat(int w, size_t elemsize, Allocator allocator)
         : m_w(0), m_h(0), m_c(0), m_cstep(0), m_dims(0), m_elemsize(0), m_pvdata(nullptr), m_allocator(nullptr), m_pirefcount(nullptr)
     {
         create(w, elemsize, allocator);
     }
 
-    aMat::aMat(int w, int h, int elemsize, Allocator allocator)
+    aMat::aMat(int w, int h, size_t elemsize, Allocator allocator)
         : m_w(0), m_h(0), m_c(0), m_cstep(0), m_dims(0), m_elemsize(0), m_pvdata(nullptr), m_allocator(nullptr), m_pirefcount(nullptr)
     {
         create(w, h, elemsize, allocator);
     }
 
-    aMat::aMat(int w, int h, int c, int elemsize, Allocator allocator)
+    aMat::aMat(int w, int h, int c, size_t elemsize, Allocator allocator)
         : m_w(0), m_h(0), m_c(0), m_cstep(0), m_dims(0), m_elemsize(0), m_pvdata(nullptr), m_allocator(nullptr), m_pirefcount(nullptr)
     {
         create(w, h, c, elemsize, allocator);
@@ -31,13 +31,13 @@ namespace ACNN
         addrefcount();
     }
 
-    aMat::aMat(int w, int h, void* data, int elemsize, Allocator allocator)
+    aMat::aMat(int w, int h, void* data, size_t elemsize, Allocator allocator)
         : m_w(w), m_h(h), m_c(1), m_dims(2), m_elemsize(elemsize), m_pvdata(data), m_allocator(allocator), m_pirefcount(nullptr)
     {
         m_cstep = w * h;
     }
 
-    aMat::aMat(int w, int h, int c, void* data, int elemsize, Allocator allocator)
+    aMat::aMat(int w, int h, int c, void* data, size_t elemsize, Allocator allocator)
         : m_w(w), m_h(h), m_c(c), m_dims(3), m_elemsize(elemsize), m_pvdata(data), m_allocator(allocator), m_pirefcount(nullptr)
     {
         m_cstep = w * h;
@@ -75,7 +75,31 @@ namespace ACNN
         return *this;
     }
 
-    void aMat::create(int w, int elemsize, Allocator allocator)
+    void aMat::fill(float _v)
+    {
+        int size = (int)total();
+        float* ptr = (float*)m_pvdata;
+
+        int i = 0;
+        for (; i < size; i++)
+        {
+            *ptr++ = _v;
+        }
+    }
+
+    void aMat::fill(int _v)
+    {
+        int size = (int)total();
+        int* ptr = (int*)m_pvdata;
+
+        int i = 0;
+        for (; i < size; i++)
+        {
+            *ptr++ = _v;
+        }
+    }
+
+    void aMat::create(int w, size_t elemsize, Allocator allocator)
     {
         if (1 == m_dims && m_w == w && m_allocator == allocator)
         {
@@ -94,14 +118,14 @@ namespace ACNN
 
         if (total() > 0)
         {
-            int total_size = alignSize(total() * m_elemsize, 4);
+            size_t total_size = alignSize(total() * m_elemsize, 4);
             if (m_allocator)
             {
                 m_pvdata = m_allocator->fastMalloc(total_size + sizeof(*m_pirefcount));
             }
             else
             {
-                m_pvdata = fastMalloc(total_size + sizeof(*m_pirefcount));
+                m_pvdata = fastMalloc(total_size + (size_t)sizeof(*m_pirefcount));
             }
             m_pirefcount = (int*)((unsigned char*)m_pvdata + total_size);
             *m_pirefcount = 1;
@@ -110,7 +134,7 @@ namespace ACNN
         return;
     }
 
-    void aMat::create(int w, int h, int elemsize, Allocator allocator)
+    void aMat::create(int w, int h, size_t elemsize, Allocator allocator)
     {
         if (2 == m_dims && m_w == w && m_h == h && m_elemsize == elemsize && m_allocator == allocator)
         {
@@ -129,14 +153,14 @@ namespace ACNN
 
         if (total() > 0)
         {
-            int total_size = alignSize(total() * m_elemsize, 4);
+            size_t total_size = alignSize(total() * m_elemsize, 4);
             if (m_allocator)
             {
                 m_pvdata = m_allocator->fastMalloc(total_size + sizeof(*m_pirefcount));
             }
             else
             {
-                m_pvdata = fastMalloc(total_size + sizeof(*m_pirefcount));
+                m_pvdata = fastMalloc(total_size + (size_t)sizeof(*m_pirefcount));
             }
             m_pirefcount = (int*)((unsigned char*)m_pvdata + total_size);
             *m_pirefcount = 1;
@@ -145,7 +169,7 @@ namespace ACNN
         return;
     }
 
-    void aMat::create(int w, int h, int c, int elemsize, Allocator allocator)
+    void aMat::create(int w, int h, int c, size_t elemsize, Allocator allocator)
     {
         if (2 == m_dims && m_w == w && m_h == h && m_c == c && m_elemsize == elemsize && m_allocator == allocator)
         {
@@ -164,14 +188,14 @@ namespace ACNN
 
         if (total() > 0)
         {
-            int total_size = alignSize(total() * m_elemsize, 4);
+            size_t total_size = alignSize(total() * m_elemsize, 4);
             if (m_allocator)
             {
                 m_pvdata = m_allocator->fastMalloc(total_size + sizeof(*m_pirefcount));
             }
             else
             {
-                m_pvdata = fastMalloc(total_size + sizeof(*m_pirefcount));
+                m_pvdata = fastMalloc(total_size + (size_t)sizeof(*m_pirefcount));
             }
             m_pirefcount = (int*)((unsigned char*)m_pvdata + total_size);
             *m_pirefcount = 1;
@@ -343,58 +367,6 @@ namespace ACNN
         if (m_pirefcount)
         {
             ACNN_XADD(m_pirefcount, 1);
-        }
-
-        return;
-    }
-
-    void copy_make_border(const aMat& src, aMat& dst, int top, int bottom, int left, int right, int type, float v)
-    {
-        int w = src.m_w;
-        int h = src.m_h;
-        int ch = src.m_c;
-        int w_new = w + left + right;
-        int h_new = h + top + bottom;
-
-        dst.create(w_new, h_new, ch, src.m_elemsize, src.m_allocator);
-        for (int q = 0; q < ch; q++)
-        {
-            const float* inptr = src.channel(q);
-            float* outptr = dst.channel(q);
-            // top
-            for (int y = 0; y < top; y++)
-            {
-                for (int x = 0; x < w_new; x++)
-                {
-                    outptr[y * w_new + x] = v;
-                }
-            }
-            for (int y = top; y < (h + top); y++)
-            {
-                // left
-                for (int x = 0; x < left; x++)
-                {
-                    outptr[y * w_new + x] = v;
-                }
-                // right
-                for (int x = w + left; x < w_new; x++)
-                {
-                    outptr[y * w_new + x] = v;
-                }
-            }
-            // bottom
-            for (int y = h + top; y < h_new; y++)
-            {
-                for (int x = 0; x < w_new; x++)
-                {
-                    outptr[y * w_new + x] = v;
-                }
-            }
-
-            for (int y = 0; y < h; y++)
-            {
-                memcpy((void*)&outptr[top*w_new + left + y*w_new], (void*)&inptr[y*w], w*src.m_elemsize);
-            }
         }
 
         return;

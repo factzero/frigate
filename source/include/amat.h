@@ -8,25 +8,28 @@ namespace ACNN
     {
     public:
         aMat();
-        aMat(int w, int elemsize = 4, Allocator allocator = nullptr);
-        aMat(int w, int h, int elemsize = 4, Allocator allocator = nullptr);
-        aMat(int w, int h, int c, int elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, size_t elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, int h, size_t elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, int h, int c, size_t elemsize = 4, Allocator allocator = nullptr);
         aMat(const aMat& m);
-        aMat(int w, int h, void* data, int elemsize = 4, Allocator allocator = nullptr);
-        aMat(int w, int h, int c, void* data, int elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, int h, void* data, size_t elemsize = 4, Allocator allocator = nullptr);
+        aMat(int w, int h, int c, void* data, size_t elemsize = 4, Allocator allocator = nullptr);
         ~aMat();
 
         aMat& operator=(const aMat& m);
 
-        void create(int w, int elemsize = 4, Allocator allocator = nullptr);
-        void create(int w, int h, int elemsize = 4, Allocator allocator = nullptr);
-        void create(int w, int h, int c, int elemsize = 4, Allocator allocator = nullptr);
+        void fill(float v);
+        void fill(int v);
+
+        void create(int w, size_t elemsize = 4, Allocator allocator = nullptr);
+        void create(int w, int h, size_t elemsize = 4, Allocator allocator = nullptr);
+        void create(int w, int h, int c, size_t elemsize = 4, Allocator allocator = nullptr);
 
         aMat reshape(int w, Allocator allocator = nullptr) const;
         aMat reshape(int w, int h, Allocator allocator = nullptr) const;
         aMat reshape(int w, int h, int c, Allocator allocator = nullptr) const;
 
-        int total() const { return m_cstep * m_c; }
+        size_t total() const { return m_cstep * m_c; }
         bool empty() const;
 
         aMat channel(int c) const;
@@ -49,9 +52,9 @@ namespace ACNN
         int m_w;
         int m_h;
         int m_c;
-        int m_cstep;
+        size_t m_cstep;
         int m_dims;
-        int m_elemsize;
+        size_t m_elemsize;
         void* m_pvdata;
         int* m_pirefcount;
         Allocator m_allocator;
@@ -69,6 +72,4 @@ namespace ACNN
     {
         return (const T*)m_pvdata;
     }
-
-    void copy_make_border(const aMat& src, aMat& dst, int top, int bottom, int left, int right, int type, float v);
 }

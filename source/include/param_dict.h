@@ -23,6 +23,13 @@ namespace ACNN
         // get array
         aMat get(int id, const aMat& def) const;
 
+        // set int
+        void set(int id, int i);
+        // set float
+        void set(int id, float f);
+        // set array
+        void set(int id, const aMat& v);
+
     private:
         struct
         {

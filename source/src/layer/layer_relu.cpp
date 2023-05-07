@@ -54,5 +54,48 @@ namespace ACNN
         return 0;
     }
 
+    int Relu::forward_inplace(aMat& bottom_top_blob, const Option& opt) const
+    {
+        const aMat& blob = bottom_top_blob;
+        int size = blob.m_w * blob.m_h;
+        int channels = blob.m_c;
+        for (int q = 0; q < channels; q++)
+        {
+            float* ioptr = blob.channel(q);
+            for (int j = 0; j < size; j++)
+            {
+                if (ioptr[j] < 0)
+                {
+                    ioptr[j] = ioptr[j] * slope;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    int Relu::forward_inplace(std::vector<aMat>& bottom_top_blobs, const Option& opt) const
+    {
+        for (size_t i = 0; i < bottom_top_blobs.size(); i++)
+        {
+            const aMat& blob = bottom_top_blobs[i];
+            int size = blob.m_w * blob.m_h;
+            int channels = blob.m_c;
+            for (int q = 0; q < channels; q++)
+            {
+                float* ioptr = blob.channel(q);
+                for (int j = 0; j < size; j++)
+                {
+                    if (ioptr[j] < 0)
+                    {
+                        ioptr[j] = ioptr[j] * slope;
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
+
     REGISTER_LAYER_CLASS(ReLU, Relu);
 }

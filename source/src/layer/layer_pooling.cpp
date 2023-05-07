@@ -1,5 +1,6 @@
 #include "layer/layer_pooling.h"
 #include "layer/layer_factory.h"
+#include "common.h"
 #include "logger.h"
 
 
@@ -95,7 +96,7 @@ namespace ACNN
             else
             {
                 aMat bottom_blob_bordered;
-                make_padding(bottom_blob, bottom_blob_bordered);
+                make_padding(bottom_blob, bottom_blob_bordered, opt);
                 if (bottom_blob_bordered.empty())
                 {
                     return -100;
@@ -173,7 +174,7 @@ namespace ACNN
         return 0;
     }
 
-    void Pooling::make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered) const
+    void Pooling::make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered, const Option& opt) const
     {
         int w = bottom_blob.m_w;
         int h = bottom_blob.m_h;
@@ -199,11 +200,11 @@ namespace ACNN
             if (htail != 0)
                 htailpad = stride_h - htail;
 
-            copy_make_border(bottom_blob, bottom_blob_bordered, pad_top, pad_bottom + htailpad, pad_left, pad_right + wtailpad, 0, pad_value);
+            copy_make_border(bottom_blob, bottom_blob_bordered, pad_top, pad_bottom + htailpad, pad_left, pad_right + wtailpad, 0, pad_value, opt);
         }
         else if (pad_mode == 1) // valid padding
         {
-            copy_make_border(bottom_blob, bottom_blob_bordered, pad_top, pad_bottom, pad_left, pad_right, 0, pad_value);
+            copy_make_border(bottom_blob, bottom_blob_bordered, pad_top, pad_bottom, pad_left, pad_right, 0, pad_value, opt);
         }
         else if (pad_mode == 2) // tensorflow padding=SAME or onnx padding=SAME_UPPER
         {
@@ -211,7 +212,7 @@ namespace ACNN
             int hpad = kernel_h + (h - 1) / stride_h * stride_h - h;
             if (wpad > 0 || hpad > 0)
             {
-                copy_make_border(bottom_blob, bottom_blob_bordered, hpad / 2, hpad - hpad / 2, wpad / 2, wpad - wpad / 2, 0, pad_value);
+                copy_make_border(bottom_blob, bottom_blob_bordered, hpad / 2, hpad - hpad / 2, wpad / 2, wpad - wpad / 2, 0, pad_value, opt);
             }
         }
         else if (pad_mode == 3) // onnx padding=SAME_LOWER
@@ -220,7 +221,7 @@ namespace ACNN
             int hpad = kernel_h + (h - 1) / stride_h * stride_h - h;
             if (wpad > 0 || hpad > 0)
             {
-                copy_make_border(bottom_blob, bottom_blob_bordered, hpad - hpad / 2, hpad / 2, wpad - wpad / 2, wpad / 2, 0, pad_value);
+                copy_make_border(bottom_blob, bottom_blob_bordered, hpad - hpad / 2, hpad / 2, wpad - wpad / 2, wpad / 2, 0, pad_value, opt);
             }
         }
 

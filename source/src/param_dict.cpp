@@ -215,6 +215,24 @@ namespace ACNN
         return params[id].type ? params[id].v : def;
     }
 
+    void ParamDict::set(int id, int i)
+    {
+        params[id].type = 2;
+        params[id].i = i;
+    }
+
+    void ParamDict::set(int id, float f)
+    {
+        params[id].type = 3;
+        params[id].f = f;
+    }
+
+    void ParamDict::set(int id, const aMat& v)
+    {
+        params[id].type = 4;
+        params[id].v = v;
+    }
+
     void ParamDict::clear()
     {
         for (int i = 0; i < ACNN_MAX_PARAM_COUNT; i++)

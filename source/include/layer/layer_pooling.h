@@ -14,7 +14,7 @@ namespace ACNN
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const override;
 
     protected:
-        void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered) const;
+        void make_padding(const aMat& bottom_blob, aMat& bottom_blob_bordered, const Option& opt) const;
 
     protected:
         int pooling_type;

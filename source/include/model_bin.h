@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "amat.h"
 #include "data_reader.h"
 
@@ -37,5 +38,21 @@ namespace ACNN
 
     private:
         const DataReader& dr;
+    };
+
+    class ModelBinFromMatArray : public ModelBin
+    {
+    public:
+        explicit ModelBinFromMatArray(std::vector<aMat>& d);
+        virtual ~ModelBinFromMatArray() {}
+
+        virtual aMat load(int w, int type) const override;
+
+    private:
+        ModelBinFromMatArray(const ModelBinFromMatArray&);
+        ModelBinFromMatArray& operator=(const ModelBinFromMatArray&);
+
+    private:
+        mutable std::vector<aMat> m_data;
     };
 }

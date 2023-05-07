@@ -61,8 +61,22 @@ namespace ACNN
             else if (flag_struct.tag == 0x000D4B38)
             {
                 // int8 data
-                ConsoleELog << "ModelBin load int8 data not supported";
-                return aMat();
+                size_t align_data_size = alignSize(w, 4);
+
+                m.create((int)align_data_size, (size_t)1u);
+                if (m.empty())
+                {
+                    return m;
+                }
+
+                nread = dr->read(m, align_data_size);
+                if (nread != align_data_size)
+                {
+                    ConsoleELog << "ModelBin read flag_struct failed " << nread;
+                    return aMat();
+                }
+
+                return m;
             }
             else if (flag_struct.tag == 0x0002C056)
             {
@@ -86,8 +100,35 @@ namespace ACNN
             if (flag != 0)
             {
                 // quantized data
-                ConsoleELog << "ModelBin load quantized data not supported";
-                return aMat();
+                m.create(w);
+                if (m.empty())
+                {
+                    return m;
+                }
+
+                float quantization_value[256];
+                nread = dr->read(quantization_value, 256 * sizeof(float));
+                if (nread != 256 * sizeof(float))
+                {
+                    ConsoleELog << "ModelBin read quantization_value failed " << nread;
+                    return aMat();
+                }
+
+                size_t align_weight_data_size = alignSize(w * sizeof(unsigned char), 4);
+                std::vector<unsigned char> index_array;
+                index_array.resize(align_weight_data_size);
+                nread = dr->read(index_array.data(), align_weight_data_size);
+                if (nread != align_weight_data_size)
+                {
+                    ConsoleELog << "ModelBin read index_array failed " << nread;
+                    return aMat();
+                }
+
+                float* ptr = m;
+                for (int i = 0; i < w; i++)
+                {
+                    ptr[i] = quantization_value[index_array[i]];
+                }
             }
             else if (flag_struct.f0 == 0)
             {
@@ -133,5 +174,22 @@ namespace ACNN
         }
 
         return aMat();
+    }
+
+    ModelBinFromMatArray::ModelBinFromMatArray(std::vector<aMat>& d)
+        :ModelBin(), m_data(d)
+    {}
+
+    aMat ModelBinFromMatArray::load(int w, int type) const
+    {
+        if (m_data.empty())
+        {
+            return aMat();
+        }
+
+        aMat m = m_data.front();
+        m_data.erase(m_data.begin());
+
+        return m;
     }
 }

@@ -1,9 +1,13 @@
 #include <iostream>
+#include <chrono>
 #include "net.h"
 #include "data_reader.h"
 #include "param_dict.h"
 #include "layer/layer_factory.h"
 #include "logger.h"
+
+using std::chrono::high_resolution_clock;
+using std::chrono::microseconds;
 
 
 namespace ACNN
@@ -131,6 +135,12 @@ namespace ACNN
             }
         }
 
+        for (auto& r : m_calc_seq)
+        {
+            std::shared_ptr<Layer> layer = m_layers[r];
+            layer->create_pipeline(opt);
+        }
+
         return 0;
     }
 
@@ -154,7 +164,11 @@ namespace ACNN
                 top_blobs.push_back(m_blobs[layer->tops[i]].get_data());
             }
             ConsoleLog << "calc " << r << " , " << layer->get_layer_type() << "  :  " << layer->get_layer_name();
+            high_resolution_clock::time_point startTime = high_resolution_clock::now();
             ret = layer->forward(bottom_blobs, top_blobs, opt);
+            high_resolution_clock::time_point endTime = high_resolution_clock::now();
+            microseconds timeInterval = std::chrono::duration_cast<microseconds>(endTime - startTime);
+            std::cout << "squeezenet.forward cost time: " << timeInterval.count() / 1000.f << " ms" << std::endl;
             for (size_t i = 0; i < layer->tops.size(); i++)
             {
                 m_blobs[layer->tops[i]].set_data(top_blobs[i]);

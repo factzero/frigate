@@ -93,6 +93,48 @@
     <ClCompile Include="source\src\layer\layer_split.cpp">
       <Filter>源文件\layer</Filter>
     </ClCompile>
+    <ClCompile Include="source\src\layer\x86\dropout_x86_avx.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\x86\math_function.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\x86\softmax_x86_avx.cpp">
+      <Filter>源文件\layer\x86</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_binaryop.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_dequantize.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_flatten.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_innerproduct.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_padding.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_quantize.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_requantize.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\quantize_tools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\layer\layer_fused_activation.cpp">
+      <Filter>源文件\layer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\examples\test_squeezenet.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\src\common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\include\allocate.h">
@@ -160,6 +202,48 @@
     </ClInclude>
     <ClInclude Include="source\include\layer\layer_split.h">
       <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\dropout_x86_avx.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\math_function.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\x86\softmax_x86_avx.h">
+      <Filter>头文件\layer\x86</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_binaryop.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_dequantize.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_fused_activation.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_innerproduct.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_padding.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_quantize.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_requantize.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\layer\layer_flatten.h">
+      <Filter>头文件\layer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\quantize_tools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\examples\test_squeezenet.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="source\include\common.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

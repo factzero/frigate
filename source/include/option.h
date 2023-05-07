@@ -11,5 +11,6 @@ namespace ACNN
     
     public:
         int use_sgemm_convolution;
+        int use_int8_inference;
     };
 }

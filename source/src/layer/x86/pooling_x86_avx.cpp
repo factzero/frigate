@@ -15,7 +15,7 @@ namespace ACNN
     {
         if (bottom_blobs.size() != top_blobs.size())
         {
-            ConsoleELog << "Pooling ERROR: bottom_blobs size(" << bottom_blobs.size() << ") != top_blobs size(" << top_blobs.size() << ")";
+            ConsoleELog << "PoolingX86avx ERROR: bottom_blobs size(" << bottom_blobs.size() << ") != top_blobs size(" << top_blobs.size() << ")";
             return -1;
         }
 
