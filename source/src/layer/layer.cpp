@@ -27,7 +27,7 @@ namespace ACNN
         return 0;
     }
 
-    int Layer::forward(const aMat& bottom_blobs, aMat& top_blobs, const Option& opt) const
+    int Layer::forward(const aMat& bottom_blob, aMat& top_blob, const Option& opt) const
     {
         return 0;
     }

@@ -165,14 +165,26 @@ namespace ACNN
             }
             ConsoleLog << "calc " << r << " , " << layer->get_layer_type() << "  :  " << layer->get_layer_name();
             high_resolution_clock::time_point startTime = high_resolution_clock::now();
-            ret = layer->forward(bottom_blobs, top_blobs, opt);
+            if (layer->support_inplace)
+            {
+                ret = layer->forward_inplace(bottom_blobs, opt);
+                for (size_t i = 0; i < layer->tops.size(); i++)
+                {
+                    m_blobs[layer->tops[i]].set_data(bottom_blobs[i]);
+                }
+            }
+            else
+            {
+                ret = layer->forward(bottom_blobs, top_blobs, opt);
+                for (size_t i = 0; i < layer->tops.size(); i++)
+                {
+                    m_blobs[layer->tops[i]].set_data(top_blobs[i]);
+                }
+            }
+            
             high_resolution_clock::time_point endTime = high_resolution_clock::now();
             microseconds timeInterval = std::chrono::duration_cast<microseconds>(endTime - startTime);
             std::cout << "squeezenet.forward cost time: " << timeInterval.count() / 1000.f << " ms" << std::endl;
-            for (size_t i = 0; i < layer->tops.size(); i++)
-            {
-                m_blobs[layer->tops[i]].set_data(top_blobs[i]);
-            }
         }
 
         output_data = m_blobs[m_output_idx].get_data();

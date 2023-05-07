@@ -7,7 +7,9 @@ namespace ACNN
 {
     Relu::Relu(const LayerParam& layer_param)
         : Layer(layer_param)
-    {}
+    {
+        support_inplace = true;
+    }
 
     int Relu::load_param(const ParamDict& pd)
     {

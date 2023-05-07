@@ -268,7 +268,7 @@ namespace ACNN
                 for (int x = 0; x < outw; x++)
                 {
                     int sum = 0;
-                    const char* kptr = (const char*)weight_data + kernel_w * kernel_h * channels * o;
+                    const char* kptr = (const char*)weight_data_int8 + kernel_w * kernel_h * channels * o;
                     for (int q = 0; q < channels; q++)
                     {
                         const aMat in_m = bottom_blob_int8.channel(q);
@@ -322,7 +322,7 @@ namespace ACNN
             int out_elemsize = use_int8_requantize ? 1u : 4u;
 
             top_blob.create(outw, outh, num_output, out_elemsize, bottom_blob_bordered.m_allocator);
-            aMat top_blob_int32(outw, outh, num_output, 4u, bottom_blob_bordered.m_allocator);
+            aMat top_blob_int32(outw, outh, num_output, (size_t)4u, bottom_blob_bordered.m_allocator);
 
             convolution_int8(bottom_blob_bordered, top_blob_int32, weight_data, kernel_w, kernel_h, dilation_w, dilation_h, stride_w, stride_h, opt);
 

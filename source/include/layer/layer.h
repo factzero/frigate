@@ -25,7 +25,7 @@ namespace ACNN
 
         virtual int create_pipeline(const Option& opt);
 
-        virtual int forward(const aMat& bottom_blobs, aMat& top_blobs, const Option& opt) const;
+        virtual int forward(const aMat& bottom_blob, aMat& top_blob, const Option& opt) const;
         virtual int forward(const std::vector<aMat>& bottom_blobs, std::vector<aMat>& top_blobs, const Option& opt) const;
         virtual int forward_inplace (aMat& bottom_top_blob, const Option& opt) const;
         virtual int forward_inplace(std::vector<aMat>& bottom_top_blobs, const Option& opt) const;

@@ -70,7 +70,7 @@ namespace ACNN
             LayerParam param;
             param.layer_type = "ReLU";
             param.layer_name = "create_activation_layer";
-            std::shared_ptr<Layer> activation = LayerRegistry::CreateLayer(param);
+            activation = LayerRegistry::CreateLayer(param);
 
             ParamDict pd;
             activation->load_param(pd);

@@ -72,7 +72,7 @@ namespace ACNN
                 nread = dr->read(m, align_data_size);
                 if (nread != align_data_size)
                 {
-                    ConsoleELog << "ModelBin read flag_struct failed " << nread;
+                    ConsoleELog << "ModelBin read int8 weights failed " << nread;
                     return aMat();
                 }
 
